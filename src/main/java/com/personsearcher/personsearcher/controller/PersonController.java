@@ -24,9 +24,10 @@ public class PersonController {
         try {
             personRecord = personService.getPersonDetailsById(id);
         } catch (PersonNotFoundException e) {
-            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+            log.error(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(personRecord, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(personRecord, HttpStatus.OK);
     }
 
     @DeleteMapping()
@@ -34,6 +35,7 @@ public class PersonController {
         try {
             personService.deletePersonById(id);
         }catch (PersonNotFoundException e){
+            log.error(e.getMessage());
             return new ResponseEntity<>(e,HttpStatus.BAD_REQUEST);
         }
         return  new ResponseEntity<>(HttpStatus.NO_CONTENT);
