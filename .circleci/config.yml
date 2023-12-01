@@ -1,0 +1,56 @@
+version: 2.1
+
+jobs:
+  compile-project:
+    docker:
+      - image: maven:3.8.4
+    steps:
+      - checkout
+      - run:
+          name: "Compile project"
+          command: "mvn compile"
+
+  test-compilability:
+    docker:
+      - image: maven:3.8.4
+    steps:
+      - checkout
+      - run:
+          name: "Check test compilability"
+          command: "mvn test-compile"
+
+  tests:
+    docker:
+      - image: maven:3.8.4
+    steps:
+      - checkout
+      - run:
+          name: "Run tests"
+          command: "mvn test"
+
+  code-quality:
+    docker:
+      - image: maven:3.8.4
+    steps:
+      - checkout
+      - run:
+          name: "Run code quality checks"
+          command: "mvn clean verify"
+
+  code-smells:
+    docker:
+      - image: maven:3.8.4
+    steps:
+      - checkout
+      - run:
+          name: "Check for code smells"
+          command: "mvn pmd:check"
+
+workflows:
+  before-merge-workflow:
+    jobs:
+      - compile-project
+      - test-compilability
+      - tests
+      - code-quality
+      - code-smells
