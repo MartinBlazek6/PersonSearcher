@@ -15,6 +15,14 @@ public class PersonService {
 
     private final TestPersonRepository testPersonRepository;
 
+
+    /**
+     * Retrieves details of a person by their ID.
+     *
+     * @param id The ID of the person.
+     * @return A {@link PersonRecord} containing details of the person.
+     * @throws PersonNotFoundException if the person with the specified ID is not found.
+     */
     public PersonRecord getPersonDetailsById(Integer id){
         log.info("Gathering info about person with ID: " + id);
         TestPerson person = testPersonRepository.findById(id)
@@ -22,6 +30,12 @@ public class PersonService {
         return new PersonRecord(person.getFirstName(), person.getLastName(), person.getNationalInsuranceNumber());
     }
 
+    /**
+     * Deletes a person by their ID.
+     *
+     * @param id The ID of the person to be deleted.
+     * @throws PersonNotFoundException if the person with the specified ID is not found.
+     */
     public void deletePersonById(Integer id){
         log.info("Deleting person with ID: " + id);
         TestPerson person = testPersonRepository.findById(id)
@@ -30,6 +44,14 @@ public class PersonService {
         testPersonRepository.delete(person);
     }
 
+    /**
+     * Updates details of a person by their ID.
+     *
+     * @param id            The ID of the person to be updated.
+     * @param personRecord  A {@link PersonRecord} containing updated details.
+     * @return A {@link PersonRecord} containing the updated details of the person.
+     * @throws PersonNotFoundException if the person with the specified ID is not found.
+     */
     public PersonRecord updatePersonDetailsById(Integer id, PersonRecord personRecord){
         log.info("Updating person details with ID: " + id);
         TestPerson person = testPersonRepository.findById(id)
