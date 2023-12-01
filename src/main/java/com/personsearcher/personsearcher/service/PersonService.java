@@ -30,4 +30,21 @@ public class PersonService {
         testPersonRepository.delete(person);
     }
 
+    public PersonRecord updatePersonDetailsById(Integer id, PersonRecord personRecord){
+        log.info("Updating person details with ID: " + id);
+        TestPerson person = testPersonRepository.findById(id)
+                .orElseThrow(()-> new PersonNotFoundException("Person with ID: " + id + " not found!"));
+
+        person.setFirstName(personRecord.firstName() != null ? personRecord.firstName() : person.getFirstName());
+        person.setLastName(personRecord.lastName() != null ? personRecord.lastName() : person.getLastName());
+
+        person = testPersonRepository.save(person);
+
+        return new PersonRecord(person.getFirstName(), person.getLastName(), person.getNationalInsuranceNumber());
+    }
+
+
+
+
+
 }

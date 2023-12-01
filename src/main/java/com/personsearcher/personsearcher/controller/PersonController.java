@@ -40,4 +40,27 @@ public class PersonController {
         }
         return  new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PatchMapping()
+    public ResponseEntity<?> updatePersonById(@RequestParam Integer id,
+                                              @RequestParam (required = false) String firstName,
+                                              @RequestParam (required = false) String lastName) {
+        if (firstName == null && lastName == null){
+            log.warn("At least one parameter is required");
+            return  new ResponseEntity<>("At least one parameter is required",HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        PersonRecord personRecord = new PersonRecord(firstName,lastName,null);
+
+        try {
+          personRecord = personService.updatePersonDetailsById(id,personRecord);
+        }catch (PersonNotFoundException e){
+            log.error(e.getMessage());
+            return new ResponseEntity<>(e,HttpStatus.BAD_REQUEST);
+        }
+        log.info("person updated");
+        return  new ResponseEntity<>(personRecord,HttpStatus.OK);
+    }
+
+
 }

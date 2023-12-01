@@ -1,9 +1,6 @@
 package com.personsearcher.personsearcher.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +12,7 @@ import javax.persistence.Id;
 @Builder
 @NoArgsConstructor
 @Getter
+@Setter
 public class TestPerson {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
