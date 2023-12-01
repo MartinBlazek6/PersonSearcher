@@ -1,0 +1,31 @@
+spring:
+  banner:
+    location: classpath:banner.txt
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+      INDENT_OUTPUT: true
+
+
+
+  application:
+    name: personSearcher
+  datasource:
+    url: jdbc:mysql://${MYSQLDB_SERVER}/${MYSQLDB_NAME}
+    username: ${MYSQLDB_ROOT_USER}
+    password: ${MYSQLDB_ROOT_PASSWORD}
+    testOnBorrow: true
+    testWhileIdle: true
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 30000
+    validationQuery: SELECT 1
+    max-active: 15
+    max-idle: 10
+    max-wait: 8000
+  flyway:
+    baselineOnMigrate: true
+    url: jdbc:mysql://${MYSQLDB_SERVER}
+    schemas: ${MYSQLDB_NAME}
+    user: ${MYSQLDB_ROOT_USER}
+    password: ${MYSQLDB_ROOT_PASSWORD}
+    locations: classpath:db.migration
