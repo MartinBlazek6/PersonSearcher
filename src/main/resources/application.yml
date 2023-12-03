@@ -1,3 +1,5 @@
+webdev:
+  url: https://webdev.zaujimave.info
 spring:
   banner:
     location: classpath:banner.txt

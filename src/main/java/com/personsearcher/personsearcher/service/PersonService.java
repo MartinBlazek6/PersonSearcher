@@ -1,12 +1,20 @@
 package com.personsearcher.personsearcher.service;
 
 import com.personsearcher.personsearcher.entity.TestPerson;
+import com.personsearcher.personsearcher.entity.exception.NationalInsurenceNumberException;
 import com.personsearcher.personsearcher.entity.exception.PersonNotFoundException;
 import com.personsearcher.personsearcher.entity.records.PersonRecord;
 import com.personsearcher.personsearcher.repository.TestPersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
@@ -14,6 +22,9 @@ import org.springframework.stereotype.Service;
 public class PersonService {
 
     private final TestPersonRepository testPersonRepository;
+
+    @Value("${webdev.url}")
+    private String webdevUrl;
 
 
     /**
@@ -65,8 +76,21 @@ public class PersonService {
         return new PersonRecord(person.getFirstName(), person.getLastName(), person.getNationalInsuranceNumber());
     }
 
+    public boolean checkNino(String rc) {
+        String url = webdevUrl + "/kontrola-rodneho-cisla/";
 
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("rc", rc);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(formData, headers);
+        String response = new RestTemplate().postForObject(url, requestEntity, String.class);
 
+        if (response == null){
+            throw new NationalInsurenceNumberException("Response is null");
+        }
 
+        return response.contains(" je OK.");
+    }
 }
