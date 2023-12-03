@@ -23,9 +23,6 @@ public class PersonService {
 
     private final TestPersonRepository testPersonRepository;
 
-    @Value("${webdev.url}")
-    private String webdevUrl;
-
 
     /**
      * Retrieves details of a person by their ID.
@@ -74,23 +71,5 @@ public class PersonService {
         person = testPersonRepository.save(person);
 
         return new PersonRecord(person.getFirstName(), person.getLastName(), person.getNationalInsuranceNumber());
-    }
-
-    public boolean checkNino(String rc) {
-        String url = webdevUrl + "/kontrola-rodneho-cisla/";
-
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("rc", rc);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(formData, headers);
-        String response = new RestTemplate().postForObject(url, requestEntity, String.class);
-
-        if (response == null){
-            throw new NationalInsurenceNumberException("Response is null");
-        }
-
-        return response.contains(" je OK.");
     }
 }
